@@ -1,18 +1,85 @@
 <template>
   <div class="section-frame section-layout">
-    <h1>functions</h1>
+    <el-skeleton v-if="!details.description" animated>
+      <template slot="template">
+        <el-row>
+          <el-col :span="12">
+            <el-skeleton-item variant="image" class="cover-pic" />
+          </el-col>
+          <el-col
+            :span="12"
+            style="height: 100%; padding: 24px 12px"
+            class="function-info"
+          >
+            <el-skeleton-item
+              variant="h1"
+              style="width: 20%; margin-bottom: 12px"
+            />
+            <el-skeleton-item variant="p" style="width: 100%" />
+            <el-skeleton-item variant="p" style="width: 100%" />
+            <el-skeleton-item variant="p" style="width: 70%" />
+          </el-col>
+        </el-row>
+      </template>
+    </el-skeleton>
+    <el-row v-else style="width: 100%; height: 100%">
+      <el-col :span="12" style="height: 100%">
+        <div class="cover-pic">
+          <el-image
+            src="https://fuss10.elemecdn.com/3/28/bbf893f792f03a54408b3b7a7ebf0jpeg.jpeg"
+            alt="image"
+            fit="contain"
+          ></el-image>
+        </div>
+      </el-col>
+      <el-col
+        :span="12"
+        style="height: 100%; padding: 24px 12px"
+        class="function-info"
+      >
+        <h1 class="function-title">{{ details.title }}</h1>
+        <p>{{ details.description }}</p>
+        <a class="link-to-page" @click="jumpToPage"
+          >see detail
+          <p class="el-icon-d-arrow-right"
+        /></a>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
 <script>
 export default {
   name: 'FuncSections',
+  props: {
+    functionInfo: {
+      type: Object,
+      default: () => {
+        return {}
+      },
+    },
+  },
   data() {
     return {
       show: true,
+      details: {},
     }
   },
+  watch: {
+    functionInfo: {
+      handler(newval, oldval) {
+        this._.delay(() => {
+          this.details = newval
+        }, 500)
+      },
+      immediate: true,
+      deep: true,
+    },
+  },
   methods: {
+    jumpToPage() {
+      this.$router.push('functionPages/blogPage')
+    },
   },
 }
 </script>
@@ -28,5 +95,25 @@ export default {
 }
 .section-layout {
   padding: 48px;
+}
+.cover-pic {
+  width: 100%;
+  height: 100%;
+}
+.function-info {
+  position: relative;
+  .function-title {
+    margin-bottom: 12px;
+  }
+  .link-to-page {
+    text-decoration-line: none;
+    position: absolute;
+    cursor: pointer;
+    bottom: 24px;
+    right: 12px;
+  }
+  .link-to-page:hover {
+    color: #1890ff;
+  }
 }
 </style>

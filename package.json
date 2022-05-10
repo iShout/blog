@@ -13,6 +13,7 @@
     "lintfix": "prettier --write --list-different . && yarn lint:js --fix"
   },
   "dependencies": {
+    "@nuxtjs/axios": "^5.13.6",
     "animate.css": "^4.1.1",
     "core-js": "^3.19.3",
     "echarts": "^5.3.2",

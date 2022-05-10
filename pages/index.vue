@@ -4,13 +4,42 @@
       ref="welcome"
       class="welcome"
       :style="welcomePos"
-      load-text="Testing Text"
+      load-text="测试文字"
       :text-size="textSize"
     />
     <transition enter-active-class="animate__slideInLeft">
-    <nav v-if="showNav" class="navigation animate__animated animate__faster">
-      <div v-for="tab in tabs" :key="tab.title" class="items">{{tab.title}}</div>
-    </nav>
+      <nav v-if="showNav" class="navigation animate__animated animate__faster">
+        <div
+          v-for="(tab, index) in tabs"
+          :key="tab.title"
+          class="items"
+          @click="clickNav(index)"
+        >
+          <div
+            class="rectangle"
+            :style="{
+              backgroundColor: navControl[index] ? 'antiquewhite' : '#00CED1',
+            }"
+          >
+            {{ tab.title }}
+          </div>
+          <img
+            :src="
+              navControl[index]
+                ? require('@/static/images/paperblue.png')
+                : require('@/static/images/papergrey.png')
+            "
+            alt=""
+            class="item-image"
+          />
+          <div
+            class="square"
+            :style="{
+              backgroundColor: navControl[index] ? 'antiquewhite' : '#00CED1',
+            }"
+          ></div>
+        </div>
+      </nav>
     </transition>
     <!-- there are main funcitons in this site -->
     <section class="functions">
@@ -19,12 +48,15 @@
         :enter-active-class="inAction"
         :leave-active-class="outAction"
       >
-        <func-sections
-          v-if="scrollProgress >= 1000"
-          :key="showTabNumber"
-          class="func-module animate__animated animate__faster"
-          style="width: 80%"
-        />
+        <keep-alive>
+          <func-sections
+            v-if="scrollProgress >= 1000"
+            :key="showTabNumber"
+            class="func-module animate__animated animate__faster"
+            style="width: 80%"
+            :function-info="tabs[showTabNumber]"
+          />
+        </keep-alive>
       </transition>
     </section>
   </body>
@@ -60,9 +92,10 @@ export default {
       tabs: [],
       showTabNumber: 0, //  the index number of controling shown tab
       isRevert: false, // 控制功能模块切换方向是正向还是反向
-      inAction: 'animate__fadeInUpBig',
-      outAction: 'animate__fadeOutUpBig',
-      showNav:false,
+      inAction: 'animate__fadeInUpBig', //  functions的进场动画
+      outAction: 'animate__fadeOutUpBig', //  functions的出场动画
+      showNav: false,
+      navControl: [],
     }
   },
   mounted() {
@@ -74,7 +107,7 @@ export default {
   destroyed() {
     window.removeEventListener(
       'wheel',
-      this._.throttle(this.switchTab, 1500, { trailing: false })
+      this._.throttle(this.switchTab, 1200, { trailing: false })
     )
   },
   methods: {
@@ -91,9 +124,7 @@ export default {
     //  function of changing welcome component's postion
     changePos(e) {
       if (this.scrollProgress >= 1000) {
-        window.removeEventListener('wheel', this.changePos)
-        this.addSwitchEvent()
-        this.showNav = true
+        this.manualAnimationOver()
       }
       let velocity = e.deltaY
       velocity = velocity >= 30 ? 30 : velocity
@@ -137,6 +168,7 @@ export default {
         )
       }, 1000)
     },
+    // function of controning how to switch page(direction and nav-style)
     switchTab(e) {
       let dire = e.deltaY
       dire = dire > 0 ? dire : 0
@@ -156,15 +188,40 @@ export default {
       } else if (this.showTabNumber < 0) {
         this.showTabNumber = max
       }
+      this.navControl.fill(false)
+      this.$set(this.navControl, this.showTabNumber, true)
+    },
+    //  手动动画结束之后执行的操作
+    manualAnimationOver() {
+      window.removeEventListener('wheel', this.changePos)
+      this.addSwitchEvent()
+      this.showNav = true
+      this.$refs.container.classList.remove('mask')
+      this.initTab()
+    },
+    //  初始化navControl(主要是初始化这个数组的长度)
+    initTab() {
+      const tabNums = this.tabs.length
+      this.navControl = new Array(tabNums).fill(false)
+      this.$set(this.navControl, 0, true)
+    },
+    //  点击具体的某个nav
+    clickNav(index) {
+      this.navControl.fill(false)
+      this.$set(this.navControl, index, true)
+      this.showTabNumber = index
     },
   },
 }
 </script>
 <style scoped lang="less">
+@desaturateNum: 0;
 .body-size {
   width: 100%;
   height: 100vh;
   overflow: auto;
+  background: url('../static/images/lxh.gif') center no-repeat;
+  background-color: rgb(247, 249, 251);
 }
 .navigation {
   width: 120px;
@@ -174,21 +231,58 @@ export default {
   flex-direction: column;
   position: fixed;
   top: 30%;
-  .items{
-    width: 80px;
+  .items {
     height: 60px;
+    margin-bottom: 24px;
+    // background-color: desaturate(antiquewhite, @desaturateNum);
+    position: relative;
+    border-radius: 6px;
+    box-sizing: border-box;
+    cursor: pointer;
+    .item-image {
+      position: absolute;
+      width: 32px;
+      height: 32px;
+      top: 14px;
+      right: -5px;
+      z-index: 15;
+    }
+    .rectangle {
+      font-family: 'FZSJ-YANGGHN';
+      width: 120px;
+      height: 100%;
+      position: absolute;
+      padding: 12px 16px;
+      border-radius: 6px;
+      line-height: 36px;
+      font-size: 24px;
+    }
+    .square {
+      width: calc(60px / sqrt(2));
+      height: calc(60px / sqrt(2));
+      position: absolute;
+      right: 0;
+      top: calc((60px - 60px / sqrt(2)) / 2);
+      transform: translateX(41.7%) rotate(45deg);
+      // background-color: desaturate(antiquewhite, @desaturateNum);
+      border-radius: 6px;
+    }
+  }
+  .items:hover {
+    box-shadow: 5px -5px 12px #e0e0e0;
+    .square {
+      box-shadow: 5px -5px 12px #e0e0e0;
+    }
   }
 }
 .welcome {
   width: 500px;
-  height: 100px;
+  height: 120px;
   position: fixed;
   z-index: 10;
 }
 .mask {
   position: relative;
-  background: url('../static/images/lxh.gif') center no-repeat;
-  background-color: rgb(247, 249, 251);
   z-index: -10;
 }
 .mask::after {

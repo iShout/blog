@@ -1,6 +1,8 @@
 <template>
   <div>
-    <p v-if="showText" class="text" :style="{fontSize:textSize+'px'}">{{ loadText }}</p>
+    <p v-if="showText" class="text" :style="{ fontSize: textSize + 'px' }">
+      {{ loadText }}
+    </p>
     <div v-else ref="welcome" style="width: 100%; height: 100%"></div>
   </div>
 </template>
@@ -13,10 +15,10 @@ export default {
       type: String,
       default: 'Blog',
     },
-    textSize:{
-      type:Number,
-      default:80
-    }
+    textSize: {
+      type: Number,
+      default: 80,
+    },
   },
   data() {
     const option = {
@@ -76,7 +78,7 @@ export default {
     this.initComp()
     setTimeout(() => {
       this.showText = true
-    }, 3000);
+    }, 3000)
   },
   methods: {
     initComp() {
@@ -91,6 +93,6 @@ export default {
   text-align: center;
   font-weight: bold;
   position: relative;
-  top: -6px;
+  top: 4px;
 }
 </style>
