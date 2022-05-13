@@ -1,7 +1,7 @@
 <template>
   <div>
     <p v-if="showText" class="text" :style="{ fontSize: textSize + 'px' }">
-      {{ loadText }}
+      {{ $store.state.siteName }}
     </p>
     <div v-else ref="welcome" style="width: 100%; height: 100%"></div>
   </div>
@@ -11,10 +11,6 @@
 export default {
   name: 'WelcomeComp',
   props: {
-    loadText: {
-      type: String,
-      default: 'Blog',
-    },
     textSize: {
       type: Number,
       default: 80,
@@ -29,7 +25,7 @@ export default {
             left: 'center',
             top: 'center',
             style: {
-              text: this.loadText,
+              text: this.$store.state.siteName,
               fontSize: 80,
               fontWeight: 'bold',
               lineDash: [0, 200],

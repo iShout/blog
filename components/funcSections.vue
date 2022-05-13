@@ -78,7 +78,11 @@ export default {
   },
   methods: {
     jumpToPage() {
-      this.$router.push('functionPages/blogPage')
+      this.$store.commit('setTitle',this.details.title)
+      this.$router.push({
+        name: 'functionPages-blogPage',
+        params:{}
+      })
     },
   },
 }

@@ -1,70 +1,76 @@
 <template>
-  <body ref="container" class="body-size mask" :style="{ '--blurPx': blurPx }">
-    <welcome-comp
-      ref="welcome"
-      class="welcome"
-      :style="welcomePos"
-      load-text="测试文字"
-      :text-size="textSize"
-    />
-    <transition enter-active-class="animate__slideInLeft">
-      <nav v-if="showNav" class="navigation animate__animated animate__faster">
-        <div
-          v-for="(tab, index) in tabs"
-          :key="tab.title"
-          class="items"
-          @click="clickNav(index)"
+    <body
+      ref="container"
+      class="body-size mask"
+      :style="{ '--blurPx': blurPx }"
+    >
+      <welcome-comp
+        ref="welcome"
+        class="welcome"
+        :style="welcomePos"
+        load-text="测试文字"
+        :text-size="textSize"
+      />
+      <transition enter-active-class="animate__slideInLeft">
+        <nav
+          v-if="showNav"
+          class="navigation animate__animated animate__faster"
         >
           <div
-            class="rectangle"
-            :style="{
-              backgroundColor: navControl[index] ? 'antiquewhite' : '#00CED1',
-            }"
+            v-for="(tab, index) in tabs"
+            :key="tab.title"
+            class="items"
+            @click="clickNav(index)"
           >
-            {{ tab.title }}
+            <div
+              class="rectangle ellipsis"
+              :style="{
+                backgroundColor: navControl[index] ? 'antiquewhite' : '#00CED1',
+              }"
+            >
+              {{ tab.title }}
+            </div>
+            <img
+              :src="
+                navControl[index]
+                  ? require('@/static/images/paperblue.png')
+                  : require('@/static/images/papergrey.png')
+              "
+              alt=""
+              class="item-image"
+            />
+            <div
+              class="square"
+              :style="{
+                backgroundColor: navControl[index] ? 'antiquewhite' : '#00CED1',
+              }"
+            ></div>
           </div>
-          <img
-            :src="
-              navControl[index]
-                ? require('@/static/images/paperblue.png')
-                : require('@/static/images/papergrey.png')
-            "
-            alt=""
-            class="item-image"
-          />
-          <div
-            class="square"
-            :style="{
-              backgroundColor: navControl[index] ? 'antiquewhite' : '#00CED1',
-            }"
-          ></div>
-        </div>
-      </nav>
-    </transition>
-    <!-- there are main funcitons in this site -->
-    <section class="functions">
-      <transition
-        mode="out-in"
-        :enter-active-class="inAction"
-        :leave-active-class="outAction"
-      >
-        <keep-alive>
-          <func-sections
-            v-if="scrollProgress >= 1000"
-            :key="showTabNumber"
-            class="func-module animate__animated animate__faster"
-            style="width: 80%"
-            :function-info="tabs[showTabNumber]"
-          />
-        </keep-alive>
+        </nav>
       </transition>
-    </section>
-  </body>
+      <!-- there are main funcitons in this site -->
+      <section class="functions">
+        <transition
+          mode="out-in"
+          :enter-active-class="inAction"
+          :leave-active-class="outAction"
+        >
+          <keep-alive>
+            <func-sections
+              v-if="scrollProgress >= 1000"
+              :key="showTabNumber"
+              class="func-module animate__animated animate__faster"
+              style="width: 80%"
+              :function-info="tabs[showTabNumber]"
+            />
+          </keep-alive>
+        </transition>
+      </section>
+    </body>
 </template>
 
 <script>
 import welcomeComp from '../components/welcomeComp.vue'
-import mockdata from './mockData'
 import FuncSections from '@/components/funcSections.vue'
 export default {
   name: 'IndexPage',
@@ -88,7 +94,6 @@ export default {
       textSize: 80,
       blurPx: '5px', //  蒙层虚化值
       blurNumber: 5,
-      mocks: mockdata,
       tabs: [],
       showTabNumber: 0, //  the index number of controling shown tab
       isRevert: false, // 控制功能模块切换方向是正向还是反向
@@ -102,7 +107,10 @@ export default {
     setTimeout(() => {
       this.addScrollListener()
     }, 3000)
-    this.getTabs()
+
+    this.getTabs().then((data) => {
+      this.tabs = data.data
+    })
   },
   destroyed() {
     window.removeEventListener(
@@ -111,8 +119,12 @@ export default {
     )
   },
   methods: {
-    getTabs() {
-      this.tabs = this.mocks.funtionTabs
+    // 获取tabs
+    async getTabs() {
+      const data = await this.$axios.get(
+        'http://127.0.0.1:4523/mock/958318/getTabs'
+      )
+      return data
     },
     //  add `scroll` event when DOM ready
     addScrollListener() {
@@ -224,7 +236,7 @@ export default {
   background-color: rgb(247, 249, 251);
 }
 .navigation {
-  width: 120px;
+  width: 180px;
   min-height: 500px;
   margin-left: 100px;
   display: flex;
@@ -249,7 +261,7 @@ export default {
     }
     .rectangle {
       font-family: 'FZSJ-YANGGHN';
-      width: 120px;
+      width: 100%;
       height: 100%;
       position: absolute;
       padding: 12px 16px;
@@ -305,5 +317,10 @@ export default {
   .func-module {
     margin: 0 auto 32px;
   }
+}
+.ellipsis {
+  overflow: hidden; //溢出隐藏
+  white-space: nowrap; //禁止换行
+  text-overflow: ellipsis; //...
 }
 </style>

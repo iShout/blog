@@ -3,6 +3,10 @@ export default {
   ssr: false,
 
   // Global page headers: https://go.nuxtjs.dev/config-head
+  server:{
+    port:8080,
+    host:'0.0.0.0'
+  },
   head: {
     title: 'blog',
     htmlAttrs: {
@@ -26,8 +30,8 @@ export default {
     '@/plugins/animate-css',
     '@/plugins/echarts',
     '@/plugins/lodash',
-    '@/plugins/less',
-    '@/plugins/axios.js'
+    '@/plugins/axios.js',
+    { src: '@/plugins/mavon-editor.js', ssr: false }
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -41,7 +45,20 @@ export default {
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
-    '@nuxtjs/axios'
+    '@nuxtjs/axios',
+    '@nuxt/content',
+    ['@nuxtjs/markdownit', {
+      preset: 'default',
+      linkify: true,
+      breaks: true,
+      use: [
+        'markdown-it-div',
+        'markdown-it-highlightjs',
+        'markdown-it-mark',
+        'markdown-it-deflist'
+      ],
+      runtime: true // Support `$md()`
+    }],
   ],
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
