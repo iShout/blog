@@ -3,9 +3,9 @@ export default {
   ssr: false,
 
   // Global page headers: https://go.nuxtjs.dev/config-head
-  server:{
-    port:8080,
-    host:'0.0.0.0'
+  server: {
+    port: 8080,
+    host: '0.0.0.0',
   },
   head: {
     title: 'blog',
@@ -31,7 +31,7 @@ export default {
     '@/plugins/echarts',
     '@/plugins/lodash',
     '@/plugins/axios.js',
-    { src: '@/plugins/mavon-editor.js', ssr: false }
+    { src: '@/plugins/mavon-editor.js', ssr: false },
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -42,23 +42,28 @@ export default {
     // https://go.nuxtjs.dev/eslint
     '@nuxtjs/eslint-module',
   ],
-
+  router: {
+    middleware: 'auth',
+  },
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     '@nuxtjs/axios',
     '@nuxt/content',
-    ['@nuxtjs/markdownit', {
-      preset: 'default',
-      linkify: true,
-      breaks: true,
-      use: [
-        'markdown-it-div',
-        'markdown-it-highlightjs',
-        'markdown-it-mark',
-        'markdown-it-deflist'
-      ],
-      runtime: true // Support `$md()`
-    }],
+    [
+      '@nuxtjs/markdownit',
+      {
+        preset: 'default',
+        linkify: true,
+        breaks: true,
+        use: [
+          'markdown-it-div',
+          'markdown-it-highlightjs',
+          'markdown-it-mark',
+          'markdown-it-deflist',
+        ],
+        runtime: true, // Support `$md()`
+      },
+    ],
   ],
 
   // Build Configuration: https://go.nuxtjs.dev/config-build

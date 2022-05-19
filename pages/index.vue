@@ -83,6 +83,20 @@ export default {
       top: '50%',
       transform: 'translate(-50%,-50%)',
     }
+    const tabs = [
+      {
+        title:'一些笔记',
+        description:'平时写代码看文章读概念刷题记下来的一些笔记啦～'
+      },
+      {
+        title:'Echarts实例',
+        description:'一些Echarts的option代码'
+      },
+      {
+        title:'Three.js实例',
+        description:'一些Three.js的实例代码'
+      }
+    ]
     return {
       welcomePos,
       offsetX,
@@ -94,7 +108,7 @@ export default {
       textSize: 80,
       blurPx: '5px', //  蒙层虚化值
       blurNumber: 5,
-      tabs: [],
+      tabs,
       showTabNumber: 0, //  the index number of controling shown tab
       isRevert: false, // 控制功能模块切换方向是正向还是反向
       inAction: 'animate__fadeInUpBig', //  functions的进场动画
@@ -107,10 +121,6 @@ export default {
     setTimeout(() => {
       this.addScrollListener()
     }, 3000)
-
-    this.getTabs().then((data) => {
-      this.tabs = data.data
-    })
   },
   destroyed() {
     window.removeEventListener(
@@ -119,13 +129,6 @@ export default {
     )
   },
   methods: {
-    // 获取tabs
-    async getTabs() {
-      const data = await this.$axios.get(
-        'http://127.0.0.1:4523/mock/958318/getTabs'
-      )
-      return data
-    },
     //  add `scroll` event when DOM ready
     addScrollListener() {
       const welcomeDom = this.$refs.welcome.$el

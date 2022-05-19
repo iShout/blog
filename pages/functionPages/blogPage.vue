@@ -26,11 +26,21 @@
     ></article>
     <div class="article-opts">
       <el-tooltip effect="light" placement="left" content="编辑当前文章">
-        <el-button type="primary" icon="el-icon-edit" circle @click="articleOpt('modify')"></el-button
+        <el-button
+          type="primary"
+          icon="el-icon-edit"
+          circle
+          @click="articleOpt('modify')"
+        ></el-button
       ></el-tooltip>
       <br />
       <el-tooltip effect="light" placement="left" content="添加新的文章">
-        <el-button type="primary" icon="el-icon-plus" circle @click="articleOpt('addNew')"></el-button>
+        <el-button
+          type="primary"
+          icon="el-icon-plus"
+          circle
+          @click="articleOpt('addNew')"
+        ></el-button>
       </el-tooltip>
     </div>
   </div>
@@ -38,18 +48,21 @@
 
 <script>
 import articles from '@/components/apis/articlesRequest.js'
+import globalReqs from '@/components/apis/globalReq.js'
 import 'github-markdown-css/github-markdown.css'
 export default {
   name: 'BlogPage',
   data() {
     return {
       articlesReq: null,
+      globalReq: null,
       articles: [],
-      currentArticle:''
+      currentArticle: '',
     }
   },
   beforeMount() {
     this.articlesReq = new articles.ArticlesRequest()
+    this.globalReq = new globalReqs.GlobalReq()
   },
   mounted() {
     this.articlesReq.getArticlesList().then((data) => {
@@ -71,16 +84,21 @@ export default {
       })
     },
     articleOpt(type) {
-      switch (type) {
-        case 'modify':
-          this.$router.push({ path: '/admin/editBlog', query: { title: this.currentArticle } })
-          break
-        case 'addNew':
-          this.$router.push({ path: '/admin/editBlog' })
-          break
-        default:
-          break
-      }
+      this.globalReq.verifyUser().then((res) => {
+        switch (type) {
+          case 'modify':
+            this.$router.push({
+              path: '/admin/editBlog',
+              query: { title: this.currentArticle },
+            })
+            break
+          case 'addNew':
+            this.$router.push({ path: '/admin/editBlog' })
+            break
+          default:
+            break
+        }
+      })
     },
   },
 }

@@ -135,7 +135,7 @@ export default {
         type: 'success',
       })
       this._.delay(() => {
-        this.$router.go(-1)
+        this.$router.push("/functionPages/blogPage")
       }, 1000)
     },
   },

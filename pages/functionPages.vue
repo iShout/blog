@@ -19,7 +19,9 @@ export default {
   data() {
     return {}
   },
-  mounted() {},
+  mounted() {
+    console.log(document.cookie,'cookies')
+  },
   methods: {},
 }
 </script>
