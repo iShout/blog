@@ -61,7 +61,8 @@ export default {
       this.userLogin(this.loginForm)
         .then((res) => {
           if (res.data.success) {
-            this.$store.commit('tokenPass')
+            console.log(res.data)
+            window.localStorage.token = res.data.data.token
             this.$router.push({ path: this.$route.query.toPath })
           }else{
             this.$message.error('账号密码输错了哦😯');

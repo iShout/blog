@@ -84,7 +84,6 @@ export default {
       })
     },
     articleOpt(type) {
-      this.globalReq.verifyUser().then((res) => {
         switch (type) {
           case 'modify':
             this.$router.push({
@@ -98,7 +97,6 @@ export default {
           default:
             break
         }
-      })
     },
   },
 }
