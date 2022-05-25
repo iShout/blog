@@ -28,6 +28,7 @@
 </template>
 
 <script>
+const CryptoJS = require("crypto-js");
 export default {
   name: 'LoginPage',
   data() {
@@ -51,9 +52,10 @@ export default {
   },
   methods: {
     async userLogin(formData) {
+      const cryptoFrom = CryptoJS.TripleDES.encrypt(JSON.stringify(formData),'cryptoKey').toString()
       const res = await this.$axios.post(
         'http://localhost:3000/login',
-        formData
+        {user:cryptoFrom}
       )
       return res
     },
@@ -69,7 +71,7 @@ export default {
           }
         })
         .catch((err) => {
-          console.err(err, 'somethingwrong')
+          console.log(err, 'somethingwrong')
         })
     },
   },

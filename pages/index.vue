@@ -8,7 +8,6 @@
         ref="welcome"
         class="welcome"
         :style="welcomePos"
-        load-text="测试文字"
         :text-size="textSize"
       />
       <transition enter-active-class="animate__slideInLeft">
@@ -62,6 +61,7 @@
               class="func-module animate__animated animate__faster"
               style="width: 80%"
               :function-info="tabs[showTabNumber]"
+              :tabIndex = 'showTabNumber'
             />
           </keep-alive>
         </transition>

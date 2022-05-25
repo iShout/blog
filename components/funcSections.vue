@@ -25,11 +25,7 @@
     <el-row v-else style="width: 100%; height: 100%">
       <el-col :span="12" style="height: 100%">
         <div class="cover-pic">
-          <el-image
-            src="https://fuss10.elemecdn.com/3/28/bbf893f792f03a54408b3b7a7ebf0jpeg.jpeg"
-            alt="image"
-            fit="contain"
-          ></el-image>
+          <component :is="picComponents[tabIndex]" />
         </div>
       </el-col>
       <el-col
@@ -41,50 +37,57 @@
         <p>{{ details.description }}</p>
         <a class="link-to-page" @click="jumpToPage"
           >see detail
-          <p class="el-icon-d-arrow-right"
-        /></a>
+          <p class="el-icon-d-arrow-right"/></a>
       </el-col>
     </el-row>
   </div>
 </template>
 
 <script>
+import PicMarkdown from './picMarkdown.vue'
+import PicEcharts from './picEcharts.vue';
 export default {
-  name: 'FuncSections',
-  props: {
-    functionInfo: {
-      type: Object,
-      default: () => {
-        return {}
-      },
+    name: "FuncSections",
+    components: { PicMarkdown, PicEcharts },
+    props: {
+        functionInfo: {
+            type: Object,
+            default: () => {
+                return {};
+            },
+        },
+        tabIndex:{
+          type:Number,
+          default:0
+        }
     },
-  },
-  data() {
-    return {
-      show: true,
-      details: {},
+    data() {
+        return {
+            show: true,
+            details: {},
+            picComponents:['PicMarkdown','PicEcharts','PicEcharts']
+        };
+    },
+    watch: {
+        functionInfo: {
+            handler(newval, oldval) {
+                this._.delay(() => {
+                    this.details = newval;
+                }, 500);
+            },
+            immediate: true,
+            deep: true,
+        },
+    },
+    methods: {
+        jumpToPage() {
+            this.$store.commit("setTitle", this.details.title);
+            this.$router.push({
+                name: "functionPages-blogPage",
+                params: {}
+            });
+        },
     }
-  },
-  watch: {
-    functionInfo: {
-      handler(newval, oldval) {
-        this._.delay(() => {
-          this.details = newval
-        }, 500)
-      },
-      immediate: true,
-      deep: true,
-    },
-  },
-  methods: {
-    jumpToPage() {
-      this.$store.commit('setTitle',this.details.title)
-      this.$router.push({
-        name: 'functionPages-blogPage',
-        params:{}
-      })
-    },
-  },
 }
 </script>
 
