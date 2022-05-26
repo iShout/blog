@@ -37,57 +37,59 @@
         <p>{{ details.description }}</p>
         <a class="link-to-page" @click="jumpToPage"
           >see detail
-          <p class="el-icon-d-arrow-right"/></a>
+          <p class="el-icon-d-arrow-right"
+        /></a>
       </el-col>
     </el-row>
   </div>
 </template>
 
 <script>
-import PicMarkdown from './picMarkdown.vue'
-import PicEcharts from './picEcharts.vue';
 export default {
-    name: "FuncSections",
-    components: { PicMarkdown, PicEcharts },
-    props: {
-        functionInfo: {
-            type: Object,
-            default: () => {
-                return {};
-            },
-        },
-        tabIndex:{
-          type:Number,
-          default:0
-        }
+  name: 'FuncSections',
+  components: {
+    PicMarkdown: () => import('./picMarkdown.vue'),
+    PicEcharts: () => import('./picEcharts.vue'),
+  },
+  props: {
+    functionInfo: {
+      type: Object,
+      default: () => {
+        return {}
+      },
     },
-    data() {
-        return {
-            show: true,
-            details: {},
-            picComponents:['PicMarkdown','PicEcharts','PicEcharts']
-        };
+    tabIndex: {
+      type: Number,
+      default: 0,
     },
-    watch: {
-        functionInfo: {
-            handler(newval, oldval) {
-                this._.delay(() => {
-                    this.details = newval;
-                }, 500);
-            },
-            immediate: true,
-            deep: true,
-        },
-    },
-    methods: {
-        jumpToPage() {
-            this.$store.commit("setTitle", this.details.title);
-            this.$router.push({
-                name: "functionPages-blogPage",
-                params: {}
-            });
-        },
+  },
+  data() {
+    return {
+      show: true,
+      details: {},
+      picComponents: ['PicMarkdown', 'PicEcharts', 'PicEcharts'],
     }
+  },
+  watch: {
+    functionInfo: {
+      handler(newval, oldval) {
+        this._.delay(() => {
+          this.details = newval
+        }, 500)
+      },
+      immediate: true,
+      deep: true,
+    },
+  },
+  methods: {
+    jumpToPage() {
+      this.$store.commit('setTitle', this.details.title)
+      this.$router.push({
+        name: 'functionPages-blogPage',
+        params: {},
+      })
+    },
+  },
 }
 </script>
 

@@ -1,80 +1,74 @@
 <template>
-    <body
-      ref="container"
-      class="body-size mask"
-      :style="{ '--blurPx': blurPx }"
-    >
-      <welcome-comp
-        ref="welcome"
-        class="welcome"
-        :style="welcomePos"
-        :text-size="textSize"
-      />
-      <transition enter-active-class="animate__slideInLeft">
-        <nav
-          v-if="showNav"
-          class="navigation animate__animated animate__faster"
+  <body ref="container" class="body-size mask" :style="{ '--blurPx': blurPx }">
+    <welcome-comp
+      ref="welcome"
+      class="welcome"
+      :style="welcomePos"
+      :text-size="textSize"
+    />
+    <transition enter-active-class="animate__slideInLeft">
+      <nav v-if="showNav" class="navigation animate__animated animate__faster">
+        <div
+          v-for="(tab, index) in tabs"
+          :key="tab.title"
+          class="items"
+          @click="clickNav(index)"
         >
           <div
-            v-for="(tab, index) in tabs"
-            :key="tab.title"
-            class="items"
-            @click="clickNav(index)"
+            class="rectangle ellipsis"
+            :style="{
+              backgroundColor: navControl[index] ? 'antiquewhite' : '#00CED1',
+            }"
           >
-            <div
-              class="rectangle ellipsis"
-              :style="{
-                backgroundColor: navControl[index] ? 'antiquewhite' : '#00CED1',
-              }"
-            >
-              {{ tab.title }}
-            </div>
-            <img
-              :src="
-                navControl[index]
-                  ? require('@/static/images/paperblue.png')
-                  : require('@/static/images/papergrey.png')
-              "
-              alt=""
-              class="item-image"
-            />
-            <div
-              class="square"
-              :style="{
-                backgroundColor: navControl[index] ? 'antiquewhite' : '#00CED1',
-              }"
-            ></div>
+            {{ tab.title }}
           </div>
-        </nav>
+          <img
+            :src="
+              navControl[index]
+                ? require('@/static/images/paperblue.png')
+                : require('@/static/images/papergrey.png')
+            "
+            alt=""
+            class="item-image"
+          />
+          <div
+            class="square"
+            :style="{
+              backgroundColor: navControl[index] ? 'antiquewhite' : '#00CED1',
+            }"
+          ></div>
+        </div>
+      </nav>
+    </transition>
+    <!-- there are main funcitons in this site -->
+    <section class="functions">
+      <transition
+        mode="out-in"
+        :enter-active-class="inAction"
+        :leave-active-class="outAction"
+      >
+        <keep-alive>
+          <func-sections
+            v-if="scrollProgress >= 1000"
+            :key="showTabNumber"
+            class="func-module animate__animated animate__faster"
+            style="width: 80%"
+            :function-info="tabs[showTabNumber]"
+            :tab-index="showTabNumber"
+          />
+        </keep-alive>
       </transition>
-      <!-- there are main funcitons in this site -->
-      <section class="functions">
-        <transition
-          mode="out-in"
-          :enter-active-class="inAction"
-          :leave-active-class="outAction"
-        >
-          <keep-alive>
-            <func-sections
-              v-if="scrollProgress >= 1000"
-              :key="showTabNumber"
-              class="func-module animate__animated animate__faster"
-              style="width: 80%"
-              :function-info="tabs[showTabNumber]"
-              :tabIndex = 'showTabNumber'
-            />
-          </keep-alive>
-        </transition>
-      </section>
-    </body>
+    </section>
+  </body>
 </template>
 
 <script>
-import welcomeComp from '../components/welcomeComp.vue'
-import FuncSections from '@/components/funcSections.vue'
 export default {
   name: 'IndexPage',
-  components: { welcomeComp, FuncSections },
+  components: {
+    welcomeComp: () => import('../components/welcomeComp.vue'),
+    FuncSections: () => import('@/components/funcSections.vue'),
+  },
   data() {
     const offsetX = 0
     const offsetY = 0
@@ -85,17 +79,17 @@ export default {
     }
     const tabs = [
       {
-        title:'一些笔记',
-        description:'平时写代码看文章读概念刷题记下来的一些笔记啦～'
+        title: '一些笔记',
+        description: '平时写代码看文章读概念刷题记下来的一些笔记啦～',
       },
       {
-        title:'Echarts实例',
-        description:'一些Echarts的option代码'
+        title: 'Echarts实例',
+        description: '一些Echarts的option代码',
       },
       {
-        title:'Three.js实例',
-        description:'一些Three.js的实例代码'
-      }
+        title: 'Three.js实例',
+        description: '一些Three.js的实例代码',
+      },
     ]
     return {
       welcomePos,

@@ -2,17 +2,6 @@
   <div id="picMarkdown" style="width: 80%; height: 100%" class="markdown-body">
   </div>
 </template>
-
-Array.prototype.myFilter = function (func,context) {
-  context = context || this
-  let res = []
-  this.map((item,index,arr)=>{
-    if(func.call(context,item,index,arr)){
-      res.push(item)
-    }
-  })
-  return res
-}
 <script>
 import 'github-markdown-css/github-markdown.css'
 

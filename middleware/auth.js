@@ -12,6 +12,8 @@ export default function ({ app, $axios, store, route, redirect }) {
           next({ path: '/loginPage', query: { toPath: to.fullPath } })
         }
       })
-    } else next()
+    } else {
+      next()
+    }
   })
 }
